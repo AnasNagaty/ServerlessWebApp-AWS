@@ -8,7 +8,9 @@ Store your data in a DynamoDB table.
 
 Create a Lambda Function to retrieve, put and delete data in your DynamoDB Table using the parameters coming from the API Gateway. 
 
-MappingTemplates/application/json
+
+
+In MappingTemplates/application/json
 
 code for GET and DELETE
 
