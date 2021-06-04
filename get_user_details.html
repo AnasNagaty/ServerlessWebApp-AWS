@@ -1,0 +1,86 @@
+<html xmlns="http://www.w3.org/1999/xhtml" >
+<head>
+    <title>Get User Details</title>
+<style>
+body {
+  background-color: black;
+color: #ffffff;
+}
+</style>
+</head>
+<body>
+    <h1>Get User Details</h1>
+    <br>
+    <a href="index.html">Home</a>
+    <br>
+    <div>
+        <label style="color:white;" for="mail">E-mail:</label>
+        <input type="email" id="mail" name="user_mail">
+    </div>
+    <br>
+    <div>
+        <label style="color:white;" for="firstNameLabel">First Name:</label>
+        <label id="firstNameLabel"/>
+    </div>
+    <br>
+    <div>
+        <label style="color:white;" for="mailLabel">E-mail:</label>
+        <label id="mailLabel"/>
+    </div>
+    <br>
+    <button type="button" id="submitBtn">Get Details</button>
+    <br>
+    <p id="error" style="color:red;"></p>
+    
+    <script>
+        var url = 'https://uaraw3r684.execute-api.us-east-1.amazonaws.com/dev/getdetails'; //'API_ENDPOINT/getuserbyemail'
+        var submitBtn = document.getElementById('submitBtn');
+        
+        submitBtn.addEventListener('click', getDetails);
+        function getDetails(){
+            var mail = document.getElementById('mail').value;
+            if(mail == ''){
+                alert("Please submit a valid email!");
+                return;
+            }
+            var params = 'email=' + mail;
+            httpGetAsync(url, params, processResponse);
+        }
+        
+        function httpGetAsync(url, params, callback){
+            var xmlHttp = new XMLHttpRequest();
+            xmlHttp.onreadystatechange = function(){
+                if(xmlHttp.readyState == 4 && xmlHttp.status == 200){
+                    callback(JSON.parse(xmlHttp.responseText));
+                }
+            }
+            console.log(params);
+            xmlHttp.open("GET", url + "/?" + params);
+            xmlHttp.send(null);
+        }
+        
+        function isEmpty(obj) {
+            for(var key in obj) {
+                if(obj.hasOwnProperty(key))
+                    return false;
+            }
+            return true;
+        }
+        
+        function processResponse(response){
+            //console.log(response);
+            if(!isEmpty(response)){
+                document.getElementById('firstNameLabel').innerHTML = response.Item.firstname;
+                document.getElementById('mailLabel').innerHTML = response.Item.email;
+                document.getElementById('error').innerHTML = "";
+            }
+            else{
+                document.getElementById('firstNameLabel').innerHTML = '';
+                document.getElementById('mailLabel').innerHTML = '';
+                document.getElementById('error').innerHTML = "Cannot find a customer with this email!";
+            }
+        }
+    </script>
+    
+</body>
+</html>

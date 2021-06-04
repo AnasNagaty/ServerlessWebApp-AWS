@@ -1,0 +1,81 @@
+<html xmlns="http://www.w3.org/1999/xhtml" >
+<head>
+    <title>Delete User</title>
+<style>
+body {
+  background-color: black;
+color: #ffffff;
+}
+</style>
+</head>
+<body>
+    <h1 style="color:white;">Delete User</h1>
+    <br>
+    <a href="index.html">Home</a>
+    <br>
+    <div>
+        <label style="color:white;" for="mail">E-mail:</label>
+        <input type="email" id="mail">
+    </div>
+    <br>
+    <div>
+        <label style="color:white;" for="firstNameLabel">First Name:</label>
+        <input type="text" id="firstName">
+    </div>
+    <br>
+    <button type="button" id="submitBtn">Del User</button>
+    <p id="response"></p>
+    <br>
+    
+    <script>
+        var url = 'https://uaraw3r684.execute-api.us-east-1.amazonaws.com/dev/delcustomer'; //'API_ENDPOINT'
+        var submitBtn = document.getElementById('submitBtn');
+        
+        submitBtn.addEventListener('click', getDetails);
+        function getDetails(){
+            var mail = document.getElementById('mail').value;
+            if(mail == ''){
+                alert("Please submit a valid email!");
+                return;
+            }
+            var params = 'email=' + mail;
+            httpDelAsync(url, params, processResponse);
+        }
+        
+        function httpDelAsync(url, params, callback){
+            var xmlHttp = new XMLHttpRequest();
+            xmlHttp.onreadystatechange = function(){
+                if(xmlHttp.readyState == 4 && xmlHttp.status == 200){
+                    callback(JSON.parse(xmlHttp.responseText));
+                }
+            }
+            console.log(params);
+            xmlHttp.open("DELETE", url + "/?" + params);
+            xmlHttp.send(null);
+        }
+        
+        function isEmpty(obj) {
+            for(var key in obj) {
+                if(obj.hasOwnProperty(key))
+                    return false;
+            }
+            return true;
+        }
+        
+        function processResponse(response){
+            //console.log(response);
+            if(!isEmpty(response)){
+                document.getElementById('firstNameLabel').innerHTML = response.Item.firstname;
+                document.getElementById('mailLabel').innerHTML = response.Item.email;
+                document.getElementById('error').innerHTML = "";
+            }
+            else{
+                document.getElementById('firstNameLabel').innerHTML = '';
+                document.getElementById('mailLabel').innerHTML = '';
+                document.getElementById('error').innerHTML = "DELETED";
+            }
+        }
+    </script>
+    
+</body>
+</html>

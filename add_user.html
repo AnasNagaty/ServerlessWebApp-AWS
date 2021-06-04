@@ -1,0 +1,66 @@
+<html xmlns="http://www.w3.org/1999/xhtml" >
+<head>
+    <title>Add User</title>
+<style>
+body {
+  background-color: black;
+color: #ffffff;
+}
+</style>
+</head>
+<body>
+    <h1 style="color:white;">Add User</h1>
+    <br>
+    <a href="index.html">Home</a>
+    <br>
+    <div>
+        <label style="color:white;" for="mail">E-mail:</label>
+        <input type="email" id="mail">
+    </div>
+    <br>
+    <div>
+        <label style="color:white;" for="firstNameLabel">First Name:</label>
+        <input type="text" id="firstName">
+    </div>
+    <br>
+    <button type="button" id="submitBtn">Add User</button>
+    <p style="color:white;" id="response"></p>
+    <br>
+    
+    <script>
+        var url = 'https://uaraw3r684.execute-api.us-east-1.amazonaws.com/dev/addcustomer'; //'API_ENDPOINT/adduser'
+        var submitBtn = document.getElementById('submitBtn');
+        
+        submitBtn.addEventListener('click', getDetails);
+        function getDetails(){
+            var mail = document.getElementById('mail').value;
+            var firstName = document.getElementById('firstName').value;
+            if(mail == '' || firstName == ''){
+                alert("Please submit valid data!");
+                return;
+            }
+            var params = '{"Item": {"email": "' + mail + '", "firstname": "' + firstName + '"}}';
+            httpPostAsync(url, params, processResponse);
+        }
+        
+        function httpPostAsync(url, params, callback){
+            var xmlHttp = new XMLHttpRequest();
+            xmlHttp.onreadystatechange = function(){
+                if(xmlHttp.readyState == 4 && xmlHttp.status == 200){
+                    callback(xmlHttp.responseText);
+                }
+            }
+            console.log(params);
+            console.log(JSON.parse(params));
+            xmlHttp.open("POST", url);            
+            xmlHttp.setRequestHeader('Content-type', 'application/json');
+            xmlHttp.send(params);
+        }
+        
+        function processResponse(response){
+            document.getElementById('response').innerHTML = response;
+        }
+    </script>
+    
+</body>
+</html>
